@@ -1,32 +1,39 @@
 # UnitySQLServerConnector
 
-## Overview
-UnitySQLServerConnector is a Unity plugin designed to simplify the process of connecting to and interacting with SQL Server databases from within your Unity projects. It provides both synchronous and asynchronous methods for executing queries and non-query commands.
+功能特性
+简单易用：通过构造函数直接初始化连接或传入连接字符串。
+错误处理：内置异常捕获机制，确保任何数据库操作失败时能够获取到具体的错误信息。
+异步支持：提供异步方法OpenConnectionAsync, ExecuteQueryAsync, 和 ExecuteNonQueryAsync，以提高应用程序性能。
+参数化查询：支持带有参数的SQL查询，有助于防止SQL注入攻击。
+使用示例
+初始化：
 
-## Features
-- Seamless integration with SQL Server databases.
-- Support for both synchronous and asynchronous database operations.
-- Error handling and reporting.
-- Easy-to-use API for executing SQL commands and queries.
+// 使用连接字符串初始化
+var db = new SqlConnectionClass("your_connection_string");
 
-## Installation
+// 或者使用服务器、端口等详细信息初始化
+var db = new SqlConnectionClass("server", "port", "database", "username", "password");
 
-### 1. Download and Import the Plugin
-1. Clone or download the repository:
-   ```sh
-   git clone https://github.com/your-username/UnitySQLServerConnector.git
-Copy the SqlServerConnection.dll file from the Assets/Plugins folder into your Unity project's Assets/Plugins folder.
-2. Add Example Script
-Copy the SQLServerSample.cs script from the Assets/Scripts folder into your Unity project's Assets/Scripts folder.
+执行查询：
 
-Configuration
-Open the plugin settings in Unity.
-Enter your SQL Server connection details (server address, port, database name, username, and password).
-Usage Examples
-Unity Script Example
-Here is an example Unity script demonstrating how to use the UnitySQLServerConnector plugin:
+try
+{
+    var result = await db.ExecuteQueryAsync("SELECT * FROM YourTable WHERE Column1=@Value1", new Dictionary<string, string>{{"@Value1", "some_value"}});
+    // 处理结果
+}
+catch (Exception ex)
+{
+    Console.WriteLine(db.ErrorMessage);
+}
 
+执行非查询：
 
+string outcome = await db.ExecuteNonQueryAsync("INSERT INTO YourTable (Column1) VALUES (@Value1)", new Dictionary<string, string>{{"@Value1", "some_value"}});
+Console.WriteLine(outcome); // 输出影响行数或错误消息
+注意事项
+确保你的Unity项目已经配置好.NET Standard 2.0或更高版本的支持。
+在生产环境中，请务必安全地存储和处理数据库凭据。
+对于复杂的查询或大量数据处理，考虑使用更高级的数据访问技术或ORM框架。
 
 Prerequisites and Setup
 To ensure smooth operation of the UnitySQLServerConnector, certain SQL Server settings need to be configured correctly. Here are the steps to set up your SQL Server:
