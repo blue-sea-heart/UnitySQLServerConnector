@@ -1,66 +1,59 @@
-# UnitySQLServerConnector
+# SqlServerConnection
 
-## Overview
-UnitySQLServerConnector is a Unity plugin designed to simplify the process of connecting to and interacting with SQL Server databases from within your Unity projects. It provides both synchronous and asynchronous methods for executing queries and non-query commands.
+SqlServerConnection 是一个用于 C# 项目的 SQL Server 数据库连接库。它提供了一个简单而强大的接口，用于执行 SQL 查询和非查询操作。
 
-## Features
-- Seamless integration with SQL Server databases.
-- Support for both synchronous and asynchronous database operations.
-- Error handling and reporting.
-- Easy-to-use API for executing SQL commands and queries.
+## 主要特性
 
-## Installation
+- 异步数据库操作支持
+- 参数化查询，防止 SQL 注入
+- 错误处理和日志记录
+- 支持事务操作
 
-### 1. Download and Import the Plugin
-1. Clone or download the repository:
-   ```sh
-   git clone https://github.com/your-username/UnitySQLServerConnector.git
-Copy the SqlServerConnection.dll file from the Assets/Plugins folder into your Unity project's Assets/Plugins folder.
-2. Add Example Script
-Copy the SQLServerSample.cs script from the Assets/Scripts folder into your Unity project's Assets/Scripts folder.
+## 使用方法
 
-Configuration
-Open the plugin settings in Unity.
-Enter your SQL Server connection details (server address, port, database name, username, and password).
-Usage Examples
-Unity Script Example
-Here is an example Unity script demonstrating how to use the UnitySQLServerConnector plugin:
+### 初始化连接
 
+```csharp
+string connectionString = "Your connection string here";
+var sqlConnection = new SqlConnectionClass(connectionString);
+执行查询
+csharp
+CopyInsert
+string query = "SELECT * FROM Users WHERE Age > @Age";
+var parameters = new Dictionary<string, string>
+{
+    { "@Age", "18" }
+};
 
+DataTable result = await sqlConnection.ExecuteQueryAsync(query, parameters);
+执行非查询操作
+csharp
+CopyInsert
+string command = "INSERT INTO Users (Name, Age) VALUES (@Name, @Age)";
+var parameters = new Dictionary<string, string>
+{
+    { "@Name", "John Doe" },
+    { "@Age", "25" }
+};
 
-Prerequisites and Setup
-To ensure smooth operation of the UnitySQLServerConnector, certain SQL Server settings need to be configured correctly. Here are the steps to set up your SQL Server:
+string result = await sqlConnection.ExecuteNonQueryAsync(command, parameters);
+类说明
+SqlConnectionClass
+主要的连接类，包含以下方法：
 
-Enable TCP/IP Protocol:
+OpenConnection(): 打开数据库连接
+OpenConnectionAsync(): 异步打开数据库连接
+CloseConnection(): 关闭数据库连接
+ExecuteQueryAsync(): 异步执行查询操作
+ExecuteNonQueryAsync(): 异步执行非查询操作
+ExecuteQuery(): 执行查询操作
+ExecuteNonQuery(): 执行非查询操作
+注意事项
+请确保在使用前正确设置连接字符串
+建议使用异步方法以提高性能
+使用参数化查询来防止 SQL 注入攻击
+贡献
+欢迎提交 Issues 和 Pull Requests 来帮助改进这个项目！
 
-Open SQL Server Configuration Manager.
-Navigate to SQL Server Network Configuration -> Protocols for [Your SQL Server Instance].
-Right-click on TCP/IP and select Enable.
-Set Authentication Mode:
-
-Open SQL Server Management Studio (SSMS).
-Right-click on your server instance in Object Explorer and select Properties.
-Go to the Security page.
-Under Server authentication, select SQL Server and Windows Authentication mode.
-Click OK and restart your SQL Server service.
-Configure 'sa' Login:
-
-In SSMS, expand Security -> Logins.
-Right-click on sa and select Properties.
-Under the General page, set a strong password.
-Under the Status page, ensure Login is set to Enabled.
-Allow Remote Connections:
-
-In SSMS, right-click on your server instance and select Properties.
-Go to the Connections page.
-Check Allow remote connections to this server.
-Click OK and ensure your firewall settings allow SQL Server connections.
-Firewall Settings:
-
-Ensure that the TCP port you are using (default is 1433) is open in the firewall.
-You might need to create an inbound rule in the Windows Firewall settings to allow connections on this port.
-Contributing
-Contributions are welcome! Please fork this repository and submit a pull request for any features, bug fixes, or enhancements.
-
-License
-This project is licensed under the MIT License.
+许可证
+MIT License
